@@ -21,7 +21,7 @@ w_i 表示未来第i天天气对该地区司机量和货物量的影响值。
 由公式可知，u_i和w_i可以通过历史数据求得。但是假想的base值是不知道的，这个值该如何得到呢？思考后得出结论：和待预测的时间段越靠近的时间段其基准base值是最接近的，可以直接通过最邻近周期的数值求解base值，即通过5.24-5.30日的历史数据求解base值。
 ### （4）base值求解的延拓思考
 第（三）步确定了base值提取的数据来源，但是如何求解这个base值呢？最简单的一种思路是求解邻近周期数据的平均值作为其base值。继续深入思考，显然可以找到一个比均值更优秀的base值，这个base值可以是满足在最邻近时间段上的让评价函数（RMSE）损失值最小的值。具体如公式所示：<br>
-![image](https://github.com/LittleBoyHack/2018-NanJing-AI-Application-Competition/tree/master/src/equals.png)<br>
+![image](https://github.com/LittleBoyHack/2018-NanJing-AI-Application-Competition/blob/master/src/equals.png)<br>
 选取上述公式的值作为base值，在实际的验证中让模型性能有了飞跃的提升。再进一步思考，base值不一定是一个单一的数值，最邻近周期内其他的一些统计特征也可以作为base的组成成分。这些因素也可能对需要预测的时间段有影响。因此，在实验中进一步对base值内容进行扩充，引入了邻近时间段内一些统计特征如均值、方差、最大值、最小值、差分、二次差分等特性。实践证明，这些值的引入对预测效果有提升。继续深挖，发现很多提供的数据信息到目前为止都没有用上，这造成了信息的浪费。回头思考发现发货记录表格里有关于近邻周期内发货需求的详细描述，发货记录的具体字段含义如下：
 <br>
 id：货物id<br>
@@ -41,7 +41,7 @@ day：日期<br>
 
   通过上述的四步思考，逐步完善了解题最终的解题思路。进而引入了一种BCKs-RM（Basis-Cycle-Keys Regression Model）回归预测方法。
   <br>
-  ![image](https://github.com/LittleBoyHack/2018-NanJing-AI-Application-Competition/tree/master/src/BCKs-RM.png)
+  ![image](https://github.com/LittleBoyHack/2018-NanJing-AI-Application-Competition/blob/master/src/BCKs-RM.png)
   <br>
 该方案通过时间划窗法将将基准(Basis)特征、周期（Cycle）特征和天气特征（Keys）构造融合，并通过xgboost回归算法建立其和未来7天的司机量和货物量的映射关系。
 
